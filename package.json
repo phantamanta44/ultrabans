@@ -1,0 +1,22 @@
+{
+  "name": "discord-ultrabans",
+  "version": "1.0.0",
+  "description": "Bans stuff",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "discord.js": "^11.1.0",
+    "requestify": "^0.2.5",
+    "uws": "^8.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phantamanta44/ultrabans.git"
+  },
+  "engines": {
+    "node": "8.1.x"
+  },
+  "license": "MIT"
+}
