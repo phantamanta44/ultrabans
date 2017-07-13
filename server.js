@@ -734,7 +734,7 @@ bot.on('message', async msg => {
         if (!guildCache.get(msg.guild.id).blacklisted)
           command.execute(msg, parts.slice(1), bot);
         else
-          msg.reply('a server has been blacklisted. Contact an administrator for more information.');
+          msg.reply('This server has been blacklisted. Contact an administrator for more information.');
       } else {
         command.execute(msg, parts.slice(1), bot);
       }
