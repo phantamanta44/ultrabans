@@ -505,9 +505,8 @@ const commands = {
           return 'User is not locally banned in guild!';
         if (result.verified)
           return 'Ban is already verified!';
-        dbBans.update(result.id, {verified: true});
+        dbBans.update(result.id, {verified: true}).then(() => updateBans(result.user));
         logs.info(`${msg.author.id} verified ${args[1]}:${args[0].id}`);
-        updateBans(result.user);
         return 'Ban verified. \uD83D\uDD28';
       } else {
         return strings.error.noPerms;
@@ -522,9 +521,8 @@ const commands = {
           return 'User is not locally banned in guild!';
         if (!result.verified)
           return 'Ban is not verified!';
-        dbBans.update(result.id, {verified: true});
+        dbBans.update(result.id, {verified: true}).then(() => updateBans(result.user));
         logs.info(`${msg.author.id} unverified ${args[1]}:${args[0].id}`);
-        updateBans(result.user);
         return 'Ban unverified.';
       } else {
         return strings.error.noPerms;
@@ -537,9 +535,8 @@ const commands = {
         let result = (await dbBans.list({user: args[0].id, source: args[1]}))[0];
         if (!result)
           return 'User is not locally banned in guild!';
-        dbBans.remove(result.id);
+        dbBans.remove(result.id).then(() => updateBans(result.user));
         logs.info(`${msg.author.id} dropped ban ${args[1]}:${args[0].id}`);
-        updateBans(result.user);
         return 'Ban dropped.';
       } else {
         return strings.error.noPerms;
@@ -578,8 +575,7 @@ const commands = {
               source: msg.guild.id,
               evidence: args[2].length !== 0 ? args[2].join(' ') : 'None provided',
               verified: await hasPermissionLevel(msg.author.id, 3)
-            });
-            updateBans(args[0].id);
+            }).then(() => updateBans(args[0].id));
             return 'User was banned. \uD83D\uDC4B';
           } else {
             return strings.error.unbannable;
@@ -599,8 +595,7 @@ const commands = {
           let result = (await dbBans.list({user: args[0].id, source: msg.guild.id}))[0];
           if (!result)
             return 'User is not locally banned!';
-          dbBans.remove(result.id);
-          updateBans(args[0].id);
+          dbBans.remove(result.id).then(() => updateBans(args[0].id));
           return 'User was unbanned.';
         } else {
           return strings.error.noPerms;
