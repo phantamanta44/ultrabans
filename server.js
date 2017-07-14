@@ -202,9 +202,9 @@ function updateBans(user) {
       if (!(guildCache.has(guild.id) && guildCache.get(guild.id).blacklisted)) {
         let banRules = banRuleCache.get(guild.id) || parseBanRules([defaultBanRules]);
         if (banRules.anyMatch(bans, guild.id))
-          guild.ban(user).catch(() => {});
+          guild.ban(user).catch(e => logs.warn(e.stack));
         else
-          guild.unban(user).catch(() => {});
+          guild.unban(user).catch(e => logs.warn(e.stack));
       }
     }
   });
@@ -225,10 +225,10 @@ function updateGuildBans(guild) {
         for (let entry of userMap.entries()) {
           if (banRules.anyMatch(entry.value, guild.id)) {
             if (guildBans.indexOf(user) === -1)
-              guild.ban(user).catch(() => {});
+              guild.ban(user).catch(e => logs.warn(e.stack));
           } else {
             if (guildBans.indexOf(user) !== -1)
-              guild.unban(user).catch(() => {});
+              guild.unban(user).catch(e => logs.warn(e.stack));
           }
         }
       });
