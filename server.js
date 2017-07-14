@@ -213,7 +213,7 @@ function updateGuildBans(guild) {
   if (!(guildCache.has(guild.id) && guildCache.get(guild.id).blacklisted)) {
     let banRules = banRuleCache.get(guild.id) || parseBanRules([defaultBanRules]);
     guild.fetchBans().then(guildBans => {
-      guildBans = guildBans.map(b => b.user);
+      guildBans = guildBans.keyArray();
       dbBans.list().then(bans => {
         let userMap = new Map();
         for (let ban of bans) {
@@ -222,8 +222,8 @@ function updateGuildBans(guild) {
           else
             userMap.set(ban.user, [ban]);
         }
-        for (let entry of userMap.entries()) {
-          if (banRules.anyMatch(entry.value, guild.id)) {
+        for (let [user, userBans] of userMap) {
+          if (banRules.anyMatch(userBans, guild.id)) {
             if (guildBans.indexOf(user) === -1)
               guild.ban(user).catch(e => logs.warn(e.stack));
           } else {
